@@ -1,0 +1,25 @@
+.titulo{
+    color: rgb(65, 109, 203);
+    
+}
+.form-principal{
+    max-width: 33%
+}
+.espacio{
+    height: 100px
+}
+.espacito{
+    padding: 15px
+}
+.borde-principal{
+    border: 4px solid rgb(65, 109, 203);
+    padding: 20px;
+    border-radius: 10px;
+}
+dt{
+    font-size: 25px;
+    color: rgb(65, 109, 203);
+}
+dL{
+    font-size: 20px;
+}
