@@ -2,20 +2,28 @@ from flask import Flask, render_template, url_for, redirect
 from flask_sqlalchemy import SQLAlchemy
 from flask_login import UserMixin, login_user, LoginManager, login_required, logout_user, current_user
 from flask_wtf import FlaskForm
-from wtforms import StringField, PasswordField, SubmitField, DateField, SelectField
+from wtforms import StringField, PasswordField, SubmitField, DateField, SelectField, FileField
 from wtforms.validators import InputRequired, Length, ValidationError
+import os
+from werkzeug.utils import secure_filename
 from flask_bcrypt import Bcrypt
 
 app = Flask(__name__)
 bcrypt = Bcrypt(app)
 app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///database.db'
-app.config['SECRET_KEY'] = 'thisisasecretkey'
+app.config['SECRET_KEY'] = 'secretkey'
 db = SQLAlchemy(app)
 
 login_manager = LoginManager()
 login_manager.init_app(app)
 login_manager.login_view = 'login'
 
+def validate_file_extension(value):
+  import os
+  ext = os.path.splitext(value.name)[1]
+  valid_extensions = ['.png','.jpg']
+  if not ext in valid_extensions:
+    raise ValidationError(u'Solo soporta imagenes')
 
 @login_manager.user_loader
 def load_user(user_id):
@@ -63,6 +71,14 @@ class LoginForm(FlaskForm):
 
     submit = SubmitField('Iniciar sesión')
 
+class ProductForm(FlaskForm):
+    name = StringField(validators=[
+                           InputRequired(), Length(min=4, max=20)], render_kw={"placeholder": "Nombre"})
+    price = StringField(validators=[
+                           InputRequired(), Length(min=1, max=20)], render_kw={"placeholder": "Precio"})
+    image = FileField("File", validators=[InputRequired(),validate_file_extension])
+
+    submit = SubmitField('Listo')
 
 @app.route('/')
 def home():
@@ -107,3 +123,14 @@ def register():
         return redirect(url_for('login'))
 
     return render_template('register.html', form=form)
+
+@ app.route('/product', methods=['GET', 'POST'])
+def product():
+    form = ProductForm()
+
+    if form.validate_on_submit():
+        file = form.file.data
+        file.save(os.path.join(os.path.abspath(os.path.dirname(__file__)),app.config['UPLOAD_FOLDER'],secure_filename(file.filename)))
+        return redirect(url_for('dashboard'))
+
+    return render_template('product.html', form=form)

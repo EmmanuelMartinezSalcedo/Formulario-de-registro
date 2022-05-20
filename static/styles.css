@@ -23,10 +23,6 @@ dl{
     align-items: center;
     background: linear-gradient(135deg, rgb(77, 155, 94), rgb(164, 121, 184));
 }
-.body2{
-
-}
-
 .btn-primary
 {
     background-color:rgb(164, 121, 184);
@@ -46,7 +42,13 @@ li{
     padding: 10px;
 }
 nav{
-    float: right;
+    display: flex;
+    width:100%;
+    background:rgb(187, 163, 199);
+    position: relative;
+    justify-content: space-between;
+    text-align: center;
+    padding: 15px 30px;
 }
 .a2{
     text-decoration:none;
@@ -69,13 +71,50 @@ nav{
     color:rgb(187, 163, 199);
 }
 .Titulo{
-    padding:15px;
+    padding:5px;
     color:rgb(128, 201, 69);
     font-family:monospace;
-}
-.Cabezera{
-    background-color:rgb(187, 163, 199);
+    font-size:40px;
 }
 .left{
     float:left;
+}
+ol{
+    display: flex;
+    list-style: none;
+    margin:auto 0;
+}
+li{
+    margin:0 2px;
+
+}
+.a{
+    color:white;
+    font-size: 20px;
+    text-decoration: none;
+    text-transform: capitalize;
+    letter-spacing:1px;
+    padding:5px 10px;
+}
+.Caja{
+    display:flex;
+    margin: auto 0;
+    height: 35px;
+    line-height: 35px;
+    border:none;
+    outline:none;
+    height: 100%;
+    font-size: 20px;
+    width: 350px;
+}
+.boton{
+    height: 40px;
+    margin: auto 0;
+    width: 100px;
+}.body2{
+    margin:0;
+    display: flex;
+    justify-content:center;
+    align-items: center;
+    background: linear-gradient(135deg, rgb(77, 155, 94), rgb(164, 121, 184));
 }
