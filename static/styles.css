@@ -1,10 +1,3 @@
-.titulo{
-    color: rgb(77, 155, 94);
-    
-}
-.espacio{
-    height: 100px
-}
 .espacito{
     padding: 10px
 }
@@ -29,6 +22,9 @@ dl{
     justify-content: center;
     align-items: center;
     background: linear-gradient(135deg, rgb(77, 155, 94), rgb(164, 121, 184));
+}
+.body2{
+
 }
 
 .btn-primary
@@ -58,4 +54,28 @@ nav{
 .btn.btn-primary[disabled] {
     background-color: rgb(187, 163, 199);
     border-color:rgb(187, 163, 199);
+}
+.Registro{
+    text-align:left;
+    border-style: solid;
+    padding: 4%;
+    border-color: rgb(128, 201, 69);
+    border-width: 10px;
+    border-radius: 30px;
+    background-color: white;
+}
+.titulito{
+    text-align:left;
+    color:rgb(187, 163, 199);
+}
+.Titulo{
+    padding:15px;
+    color:rgb(128, 201, 69);
+    font-family:monospace;
+}
+.Cabezera{
+    background-color:rgb(187, 163, 199);
+}
+.left{
+    float:left;
 }

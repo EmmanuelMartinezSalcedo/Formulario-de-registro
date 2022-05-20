@@ -1,9 +1,21 @@
 {% extends "layout.html" %}
-
+{% block title %}Desarrollo BP{% endblock %}
 {% block heading %}
 
 {% endblock %}
 {% block body %}
-<h1>Final</h1>
-<a href="{{url_for('logout')}}">Cerrar sesión</a>
+<body>
+    <nav class="left">
+        <div class="Titulo">Desarrollo BP</div>
+        <div class="Caja">
+            <input type="search" placeholder="Buscar...">
+            <span class="fa fa-search"></span>
+        </div>
+        <ol>
+            <li><a href='#'>Carrito</a></li>
+            <li><a href="{{url_for('logout')}}">Cerrar sesión</a></li>
+        </ol>
+    </nav>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-ka7Sk0Gln4gmtz2MlQnikT1wXgYsOg+OMhuP+IlRH9sENBO0LRn5q+8nbTov4+1p" crossorigin="anonymous"></script>
+</body>
 {% endblock %}

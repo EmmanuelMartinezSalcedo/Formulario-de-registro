@@ -1,15 +1,28 @@
 {% extends "layout.html" %}
+{% block title %}Registrate{% endblock %}
 
-{% block heading %}
-
-{% endblock %}
 {% block body %}
-<form action="" method="post" id="nameform" >
-    {{ form.hidden_tag() }}
-    {{ form.username }}
-    {{ form.password }}
-    {{ form.submit }}
-</form>
-<a href="{{ url_for('login')}}">¿Ya tienes una cuenta? Inicia sesión</a>
-<script src="{{ url_for ('static', filename='index.js') }}"></script>
+<body class="body1">
+    <div  class="Registro">
+        <form action="" method="post" id="nameform">
+            <h1 class="titulito">¡Registrate!</h1>
+            <div class="espacito2"></div>
+            {{ form.csrt_token }}
+            {{ form.hidden_tag() }}
+            {{ form.name }}
+            {{ form.lastname }}
+            <div class="espacito2"></div>
+            {{form.birthday(class='datepicker')}}
+            {{form.sex}}
+            <div class="espacito2"></div>
+            {{ form.username }}
+            {{ form.password }}
+            <div class="espacito2"></div>
+            {{ form.submit }}
+        </form>
+        <a href="{{ url_for('login')}}">¿Ya tienes una cuenta? Inicia sesión</a>
+        <script src="{{ url_for ('static', filename='index.js') }}"></script>
+    </div>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-ka7Sk0Gln4gmtz2MlQnikT1wXgYsOg+OMhuP+IlRH9sENBO0LRn5q+8nbTov4+1p" crossorigin="anonymous"></script>
+</body>
 {% endblock %}

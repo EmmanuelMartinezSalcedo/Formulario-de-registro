@@ -2,7 +2,7 @@ from flask import Flask, render_template, url_for, redirect
 from flask_sqlalchemy import SQLAlchemy
 from flask_login import UserMixin, login_user, LoginManager, login_required, logout_user, current_user
 from flask_wtf import FlaskForm
-from wtforms import StringField, PasswordField, SubmitField
+from wtforms import StringField, PasswordField, SubmitField, DateField, SelectField
 from wtforms.validators import InputRequired, Length, ValidationError
 from flask_bcrypt import Bcrypt
 
@@ -29,13 +29,22 @@ class User(db.Model, UserMixin):
 
 
 class RegisterForm(FlaskForm):
+    name = StringField(validators=[
+                           InputRequired(), Length(min=4, max=20)], render_kw={"placeholder": "Nombre"})
+    lastname = StringField(validators=[
+                           InputRequired(), Length(min=4, max=20)], render_kw={"placeholder": "Apellido"})
+
+    birthday = DateField('Start Date', format='%d/%m/%y', validators=[
+                           InputRequired(), Length(min=4, max=20)], render_kw={"placeholder": "Fecha de nacimiento"})
     username = StringField(validators=[
-                           InputRequired(), Length(min=4, max=20)], render_kw={"placeholder": "Username"})
+                           InputRequired(), Length(min=4, max=20)], render_kw={"placeholder": "Correo"})
+
+    sex = SelectField('sex', choices=[('H','Hombre'),('F','Mujer')])
 
     password = PasswordField(validators=[
-                             InputRequired(), Length(min=8, max=20)], render_kw={"placeholder": "Password"})
+                             InputRequired(), Length(min=8, max=20)], render_kw={"placeholder": "Contraseña"})
 
-    submit = SubmitField('Register')
+    submit = SubmitField('Registrar')
 
     def validate_username(self, username):
         existing_user_username = User.query.filter_by(
@@ -52,7 +61,7 @@ class LoginForm(FlaskForm):
     password = PasswordField(validators=[
                              InputRequired(), Length(min=8, max=20)], render_kw={"placeholder": "Password"})
 
-    submit = SubmitField('Login')
+    submit = SubmitField('Iniciar sesión')
 
 
 @app.route('/')
@@ -91,7 +100,8 @@ def register():
 
     if form.validate_on_submit():
         hashed_password = bcrypt.generate_password_hash(form.password.data)
-        new_user = User(username=form.username.data, password=hashed_password)
+        new_user = User(username=form.username.data, password=hashed_password,
+        name=form.name.data, lastname=form.lastname.data, birthday=form.birthday.data)
         db.session.add(new_user)
         db.session.commit()
         return redirect(url_for('login'))
