@@ -4,13 +4,13 @@
 .container{
     max-width: 700px;
     width: 100%;
-    background-color:white;
+    background-color:rgb(0, 0, 0);
     padding: 30px 50px;
     border-radius:5px;
 }
 dt{
     font-size: 25px;
-    color: rgb(77, 155, 94);
+    color: rgb(255, 255, 255);
 }
 dl{
     font-size: 20px;
@@ -21,13 +21,7 @@ dl{
     height: 100vh;
     justify-content: center;
     align-items: center;
-    background: linear-gradient(135deg, rgb(77, 155, 94), rgb(164, 121, 184));
-}
-.btn-primary
-{
-    background-color:rgb(164, 121, 184);
-    border-color:rgb(164, 121, 184);
-    width:100px;
+    background: rgb(22, 18, 17);
 }
 .espacito2{
     padding: 10px;
@@ -44,7 +38,7 @@ li{
 nav{
     display: flex;
     width:100%;
-    background:rgb(187, 163, 199);
+    background:rgb(227, 230, 222);
     position: relative;
     justify-content: space-between;
     text-align: center;
@@ -53,22 +47,19 @@ nav{
 .a2{
     text-decoration:none;
 }
-.btn.btn-primary[disabled] {
-    background-color: rgb(187, 163, 199);
-    border-color:rgb(187, 163, 199);
-}
+
 .Registro{
     text-align:left;
     border-style: solid;
     padding: 4%;
-    border-color: rgb(128, 201, 69);
-    border-width: 10px;
+    border-color: rgb(34, 34, 34);
+    border-width: 2px;
     border-radius: 30px;
-    background-color: white;
+    background-color: rgb(0, 0, 0);
 }
 .titulito{
     text-align:left;
-    color:rgb(187, 163, 199);
+    color:rgb(255, 255, 255);
 }
 .Titulo{
     padding:5px;
@@ -89,12 +80,15 @@ li{
 
 }
 .a{
-    color:white;
+    color:rgb(0, 0, 0);
     font-size: 20px;
     text-decoration: none;
     text-transform: capitalize;
     letter-spacing:1px;
     padding:5px 10px;
+}
+.a:hover{
+    color:rgb(0, 0, 0);
 }
 .Caja{
     display:flex;
@@ -116,5 +110,8 @@ li{
     display: flex;
     justify-content:center;
     align-items: center;
-    background: linear-gradient(135deg, rgb(77, 155, 94), rgb(164, 121, 184));
+    background: rgb(22, 18, 17);
+}
+.logo{
+    size: 40px;
 }
