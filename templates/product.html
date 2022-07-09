@@ -4,17 +4,18 @@
 {% block body %}
 <body class="body1">
     <div  class="Registro">
-        <form action="" method="post" id="nameform">
+        <form method="POST" id="nameform" enctype="multipart/form-data">
             <h1 class="titulito">¡Registra tu producto!</h1>
             <div class="espacito2"></div>
-            {{ form.csrt_token }}
-            {{ form.hidden_tag() }}
-            {{ form.name }}
-            {{ form.price }}
+            <input type="text" name="nombre">
             <div class="espacito2"></div>
-            {{form.image }}
+            <input type="number" name="precio">
             <div class="espacito2"></div>
-            {{ form.submit }}
+            <input type="text" name="descripcion">
+            <div class="espacito2"></div>
+            <input type="file" name="imagen">
+            <div class="espacito2"></div>
+            <button>Listo</button>
         </form>
         <script src="{{ url_for ('static', filename='index.js') }}"></script>
     </div>
