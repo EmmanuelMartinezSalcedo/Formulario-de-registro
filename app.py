@@ -94,7 +94,7 @@ class RegisterForm(FlaskForm):
         existing_user_username = User.query.filter_by(username=username.data).first()
         if existing_user_username:
             raise ValidationError(
-                "That username already exists. Please choose a different one."
+                "Ese correo ya existe, elija otro"
             )
 
 
@@ -128,6 +128,17 @@ def login():
                 return redirect(url_for("tienda"))
     return render_template("login.html", form=form)
 
+@app.route("/usersapi")
+@login_required
+def api2():
+    try:
+        users = User.query.all()
+        toReturn2 = [user.serialize() for user in users]
+        return jsonify(toReturn2), 200
+
+    except Exception:
+        print("[SERVER]: Error")
+        return jsonify({"msg": "Ha ocurrido un error"}),
 
 @app.route("/tienda/api")
 @login_required
@@ -145,8 +156,9 @@ def api():
 @app.route("/tienda", methods=["GET", "POST"])
 @login_required
 def tienda():
-
-    return render_template("tienda.html")
+    hists = os.listdir('static/productos')
+    hists = ['productos/' + file for file in hists]
+    return render_template("tienda.html", hists = hists, products = toReturn)
 
 
 @app.route("/logout", methods=["GET", "POST"])
@@ -175,8 +187,8 @@ def product():
         file = request.files["imagen"]
         filename = secure_filename(file.filename)
 
-        file.save(os.path.join("./IMAGENES", filename))
-        path = "/IMAGENES/" + filename
+        file.save(os.path.join("./static/productos", filename))
+        path = "static/productos/" + filename
 
         descripcion = request.form.get("descripcion")
         precio = request.form.get("precio")
