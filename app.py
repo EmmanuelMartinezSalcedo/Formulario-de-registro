@@ -1,13 +1,21 @@
 from flask import Flask, render_template, url_for, redirect, request, jsonify
 from flask_sqlalchemy import SQLAlchemy
-from flask_login import UserMixin, login_user, LoginManager, login_required, logout_user
+from flask_login import (
+    UserMixin,
+    login_user,
+    LoginManager,
+    login_required,
+    logout_user,
+    current_user
+)
 from flask_wtf import FlaskForm
 from wtforms import (
     StringField,
     PasswordField,
     SubmitField,
     DateField,
-    SelectField
+    SelectField,
+    EmailField
 )
 from wtforms.validators import InputRequired, Length, ValidationError
 from werkzeug.utils import secure_filename
@@ -34,21 +42,37 @@ def load_user(user_id):
 
 class User(db.Model, UserMixin):
     id = db.Column(db.Integer, primary_key=True)
-    username = db.Column(db.String(20), nullable=False, unique=True)
+    username = db.Column(db.String(100), nullable=False, unique=True)
     password = db.Column(db.String(80), nullable=False)
+    name = db.Column(db.String(80), nullable=False)
+    lastname = db.Column(db.String(80), nullable=False)
+
+    def __str__(self):
+        return "\nNombre: {}. Apellido: {}. Correo: {}.\n".format(
+            self.name, self.lastname, self.username
+        )
+
+    def serialize(self):
+        return {
+            "id": self.id,
+            "name": self.name,
+            "lastname": self.lastname,
+            "username": self.username,
+        }
 
 
 class images(db.Model):
     __bind_key__ = "images"
     id = db.Column(db.Integer, primary_key=True)
+    owner = db.Column(db.String(50))
     img = db.Column(db.String(200))
     name = db.Column(db.String(50))
     price = db.Column(db.Integer, nullable=False)
     description = db.Column(db.String, nullable=False)
 
     def __str__(self):
-        return "\nNombre: {}. Precio: {}. Descripción: {}. Imagen: {}.\n".format(
-            self.name, self.price, self.description, self.img
+        return "\nNombre: {}. Precio: {}. Descripción: {}. Imagen: {}. Dueño: {}.\n".format(
+            self.name, self.price, self.description, self.img, self.owner
         )
 
     def serialize(self):
@@ -58,6 +82,7 @@ class images(db.Model):
             "price": self.price,
             "description": self.description,
             "img": self.img,
+            "owner": self.owner,
         }
 
 
@@ -76,8 +101,8 @@ class RegisterForm(FlaskForm):
         validators=[InputRequired()],
         render_kw={"placeholder": "Fecha de nacimiento"},
     )
-    username = StringField(
-        validators=[InputRequired(), Length(min=4, max=20)],
+    username = EmailField(
+        validators=[InputRequired(), Length(min=4, max=100)],
         render_kw={"placeholder": "Correo"},
     )
 
@@ -93,14 +118,12 @@ class RegisterForm(FlaskForm):
     def validate_username(self, username):
         existing_user_username = User.query.filter_by(username=username.data).first()
         if existing_user_username:
-            raise ValidationError(
-                "Ese correo ya existe, elija otro"
-            )
+            raise ValidationError("Ese correo ya existe, elija otro")
 
 
 class LoginForm(FlaskForm):
-    username = StringField(
-        validators=[InputRequired(), Length(min=4, max=20)],
+    username = EmailField(
+        validators=[InputRequired(), Length(min=4, max=100)],
         render_kw={"placeholder": "Correo"},
     )
 
@@ -128,6 +151,7 @@ def login():
                 return redirect(url_for("tienda"))
     return render_template("login.html", form=form)
 
+
 @app.route("/usersapi")
 @login_required
 def api2():
@@ -138,7 +162,8 @@ def api2():
 
     except Exception:
         print("[SERVER]: Error")
-        return jsonify({"msg": "Ha ocurrido un error"}),
+        return jsonify({"msg": "Ha ocurrido un error"}), 500
+
 
 @app.route("/tienda/api")
 @login_required
@@ -156,9 +181,9 @@ def api():
 @app.route("/tienda", methods=["GET", "POST"])
 @login_required
 def tienda():
-    hists = os.listdir('static/productos')
-    hists = ['productos/' + file for file in hists]
-    return render_template("tienda.html", hists = hists, products = toReturn)
+    hists = os.listdir("static/productos")
+    hists = ["productos/" + file for file in hists]
+    return render_template("tienda.html", hists=hists)
 
 
 @app.route("/logout", methods=["GET", "POST"])
@@ -174,7 +199,12 @@ def register():
 
     if form.validate_on_submit():
         hashed_password = bcrypt.generate_password_hash(form.password.data)
-        new_user = User(username=form.username.data, password=hashed_password)
+        new_user = User(
+            username=form.username.data,
+            password=hashed_password,
+            name=form.name.data,
+            lastname=form.lastname.data,
+        )
         db.session.add(new_user)
         db.session.commit()
         return redirect(url_for("login"))
@@ -182,6 +212,7 @@ def register():
 
 
 @app.route("/product", methods=["GET", "POST"])
+@login_required
 def product():
     if request.method == "POST":
         file = request.files["imagen"]
@@ -193,7 +224,12 @@ def product():
         descripcion = request.form.get("descripcion")
         precio = request.form.get("precio")
         nombre = request.form.get("nombre")
-        imagen_ = images(name=nombre, price=precio, description=descripcion, img=path)
+
+        current = current_user.name
+
+        imagen_ = images(
+            name=nombre, price=precio, description=descripcion, img=path, owner=current
+        )
         db.session.add(imagen_)
         db.session.commit()
         return redirect(url_for("tienda"))
